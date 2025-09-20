@@ -1,36 +1,65 @@
 from django.contrib import admin
-from .models import Products, Categories, ProductVariants, ProductImages
+from .models import (
+    Product,
+    Category,
+    ProductVariant,
+    ProductImage,
+    ProductAttribute,
+    ProductAttributeValue,
+    ProductInventory,
+    ProductAnalytics,
+    ProductReviewsSummary,
+)
 
-@admin.register(Products)
-class ProductsAdmin(admin.ModelAdmin):
-    list_display = ('product_id', 'product_name', 'shop', 'category', 'status', 'created_at')
+@admin.register(Product)
+class ProductAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'shop', 'category', 'status', 'created_at')
     list_filter = ('status', 'shop', 'category')
-    search_fields = ('product_name', 'shop__shop_name', 'sku')
+    search_fields = ('name', 'shop__name', 'sku')
     raw_id_fields = ('shop', 'category')
     date_hierarchy = 'created_at'
 
-@admin.register(Categories)
-class CategoriesAdmin(admin.ModelAdmin):
-    list_display = ('category_id', 'category_name', 'parent_category', 'is_active', 'sort_order')
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'parent', 'is_active', 'sort_order')
     list_filter = ('is_active',)
-    search_fields = ('category_name',)
-    raw_id_fields = ('parent_category',)
+    search_fields = ('name',)
+    raw_id_fields = ('parent',)
 
-@admin.register(ProductVariants)
-class ProductVariantsAdmin(admin.ModelAdmin):
-    list_display = ('variant_id', 'product', 'variant_name', 'sku', 'price', 'is_default')
-    search_fields = ('sku', 'variant_name', 'product__product_name')
+@admin.register(ProductVariant)
+class ProductVariantAdmin(admin.ModelAdmin):
+    list_display = ('id', 'product', 'name', 'sku', 'price', 'is_default')
+    search_fields = ('sku', 'name', 'product__name')
     raw_id_fields = ('product',)
 
-@admin.register(ProductImages)
-class ProductImagesAdmin(admin.ModelAdmin):
-    list_display = ('image_id', 'product', 'variant', 'is_primary', 'sort_order')
+@admin.register(ProductImage)
+class ProductImageAdmin(admin.ModelAdmin):
+    list_display = ('id', 'product', 'variant', 'is_primary', 'sort_order')
     list_filter = ('is_primary',)
-    search_fields = ('alt_text', 'product__product_name')
+    search_fields = ('alt_text', 'product__name')
     raw_id_fields = ('product', 'variant')
 
-# Register other product-related models if needed
-# from .models import ProductAnalytics, ProductInventory, Reviews, etc.
-# admin.site.register(ProductAnalytics)
-# admin.site.register(ProductInventory)
-# admin.site.register(Reviews)
+@admin.register(ProductAttribute)
+class ProductAttributeAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'type', 'is_required')
+    search_fields = ('name',)
+
+@admin.register(ProductAttributeValue)
+class ProductAttributeValueAdmin(admin.ModelAdmin):
+    list_display = ('id', 'product', 'attribute', 'value')
+    raw_id_fields = ('product', 'attribute')
+
+@admin.register(ProductInventory)
+class ProductInventoryAdmin(admin.ModelAdmin):
+    list_display = ('id', 'variant', 'quantity_available', 'quantity_reserved')
+    raw_id_fields = ('variant',)
+
+@admin.register(ProductAnalytics)
+class ProductAnalyticsAdmin(admin.ModelAdmin):
+    list_display = ('id', 'product', 'date', 'views', 'clicks', 'purchases')
+    raw_id_fields = ('product',)
+
+@admin.register(ProductReviewsSummary)
+class ProductReviewsSummaryAdmin(admin.ModelAdmin):
+    list_display = ('id', 'product', 'average_rating', 'total_reviews')
+    raw_id_fields = ('product',)

@@ -10,6 +10,4 @@ urlpatterns = [
     path('mine/', views.my_shops, name='my-shops'),
     path('mine/<int:pk>/', views.my_shop_detail, name='my-shop-detail'),
     path('submit/', views.submit_shop, name='submit-shop'),
-    path('<int:pk>/upload-document/', views.upload_document, name='upload-document'),
-    path('<int:pk>/upload-attachment/', views.upload_attachment, name='upload-attachment'),
 ]

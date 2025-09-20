@@ -1,7 +1,7 @@
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Product
+from .models import Product, Category
 from .serializers import ProductSerializer
 from shop.models import Shop
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
@@ -74,18 +74,32 @@ def submit_product(request):
     user = request.user if request.user and request.user.is_authenticated else None
     if not user:
         return Response({'detail': 'Authentication required'}, status=status.HTTP_401_UNAUTHORIZED)
+
     shop_id = request.data.get('shop')
+    category_id = request.data.get('category')
     name = request.data.get('name')
-    price = request.data.get('price')
-    category = request.data.get('category', '')
-    description = request.data.get('description', '')
-    if not shop_id or not name or price is None:
+    slug = request.data.get('slug')
+    description = request.data.get('description')
+
+    if not all([shop_id, category_id, name, slug]):
         return Response({'detail': 'Missing fields'}, status=status.HTTP_400_BAD_REQUEST)
+
     try:
         shop = Shop.objects.get(pk=shop_id, owner=user)
+        category = Category.objects.get(pk=category_id)
     except Shop.DoesNotExist:
         return Response({'detail': 'Shop not found'}, status=status.HTTP_404_NOT_FOUND)
-    p = Product.objects.create(shop=shop, name=name, price=price, description=description, category=category, status='pending')
+    except Category.DoesNotExist:
+        return Response({'detail': 'Category not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    p = Product.objects.create(
+        shop=shop,
+        category=category,
+        name=name,
+        slug=slug,
+        description=description,
+        status='pending'
+    )
     return Response(ProductSerializer(p).data, status=status.HTTP_201_CREATED)
 
 

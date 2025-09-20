@@ -1,14 +1,11 @@
 from django.db import models
+from users.models import User
 
-
-class SellerMessagesSellermessage(models.Model):
-    id = models.BigAutoField(primary_key=True)
+class SellerMessage(models.Model):
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_messages')
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_messages')
     message = models.TextField()
-    created_at = models.DateTimeField()
-    receiver = models.ForeignKey('UsersUser', models.DO_NOTHING)
-    sender = models.ForeignKey('UsersUser', models.DO_NOTHING, related_name='sellermessagessellermessage_sender_set')
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        managed = False
-        db_table = 'seller_messages_sellermessage'
-        
+        db_table = 'seller_message'

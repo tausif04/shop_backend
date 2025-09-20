@@ -1,7 +1,7 @@
 from django.contrib import admin
-from .models import SupportSupportticket
+from .models import SupportTicket
 
-@admin.register(SupportSupportticket)
+@admin.register(SupportTicket)
 class SupportTicketAdmin(admin.ModelAdmin):
     list_display = ('id', 'user', 'subject', 'status', 'created_at')
     search_fields = ('subject', 'user__username')

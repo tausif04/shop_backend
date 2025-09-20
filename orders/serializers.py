@@ -1,31 +1,19 @@
 from rest_framework import serializers
-from .models import Order
+from .models import Order, OrderItem
+from users.serializers import UserSerializer
+from products.serializers import ProductSerializer
 
+class OrderItemSerializer(serializers.ModelSerializer):
+    product = ProductSerializer()
+
+    class Meta:
+        model = OrderItem
+        fields = '__all__'
 
 class OrderSerializer(serializers.ModelSerializer):
-    customer = serializers.SerializerMethodField()
-    product_name = serializers.SerializerMethodField()
-    shop = serializers.SerializerMethodField()
-    date = serializers.SerializerMethodField()
+    items = OrderItemSerializer(many=True, read_only=True)
+    customer = UserSerializer(read_only=True)
 
     class Meta:
         model = Order
-        fields = [
-            'id', 'status', 'quantity',
-            'customer', 'product_name', 'shop', 'date'
-        ]
-
-    def get_customer(self, obj: Order):
-        return obj.user.get_full_name() or obj.user.username
-
-    def get_product_name(self, obj: Order):
-        return getattr(obj.product, 'name', '')
-
-    def get_shop(self, obj: Order):
-        try:
-            return obj.product.shop.name
-        except Exception:
-            return ''
-
-    def get_date(self, obj: Order):
-        return (obj.created_at.date().isoformat() if obj.created_at else '')
+        fields = '__all__'

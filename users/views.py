@@ -26,7 +26,7 @@ def sellers_summary(request):
             'email': u.email,
             'status': 'approved' if u.is_active else 'pending',
             'dateApplied': (u.date_joined.date().isoformat() if hasattr(u, 'date_joined') else ''),
-            'shopName': (Shop.objects.filter(owner=u).first().name if shop_count == 1 else f'{shop_count} shops') 
+            'shopName': (Shop.objects.filter(owner=u).first().name if shop_count == 1 else f'{shop_count} shops'),
             'shopsCount': shop_count,
         })
     return Response({'sellers': sellers})

@@ -103,7 +103,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Custom user model
-AUTH_USER_MODEL = 'users.UsersUser'
+AUTH_USER_MODEL = 'users.User'
 
 # CORS (dev)
 CORS_ALLOW_ALL_ORIGINS = True

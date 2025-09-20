@@ -8,7 +8,7 @@ from rest_framework.permissions import IsAdminUser
 
 @api_view(['GET'])
 def order_list(request):
-    qs = Order.objects.select_related('user', 'product', 'product__shop').all()
+    qs = Order.objects.all()
     return Response({'orders': OrderSerializer(qs, many=True).data})
 
 
